@@ -67,23 +67,30 @@ const __flash settings_t defaults = {
     .max_travel[AXIS_1] = (-DEFAULT_AXIS1_MAX_TRAVEL),
     .max_travel[AXIS_2] = (-DEFAULT_AXIS2_MAX_TRAVEL),
     .max_travel[AXIS_3] = (-DEFAULT_AXIS3_MAX_TRAVEL),
+    .backlash_per_axis[AXIS_1]=DEFAULT_AXIS1_BACKLASH,
+    .backlash_per_axis[AXIS_2]=DEFAULT_AXIS2_BACKLASH,
+    .backlash_per_axis[AXIS_3]=DEFAULT_AXIS3_BACKLASH,
+    
 #if N_AXIS > 3
     .steps_per_mm[AXIS_4] = DEFAULT_AXIS4_STEPS_PER_UNIT,
     .max_rate[AXIS_4] = DEFAULT_AXIS4_MAX_RATE,
     .acceleration[AXIS_4] = DEFAULT_AXIS4_ACCELERATION,
     .max_travel[AXIS_4] = (-DEFAULT_AXIS4_MAX_TRAVEL),
+    .backlash_per_axis[AXIS_4]=DEFAULT_AXIS4_BACKLASH,
 #endif
 #if N_AXIS > 4
     .steps_per_mm[AXIS_5] = DEFAULT_AXIS5_STEPS_PER_UNIT,
     .max_rate[AXIS_5] = DEFAULT_AXIS5_MAX_RATE,
     .acceleration[AXIS_5] = DEFAULT_AXIS5_ACCELERATION,
     .max_travel[AXIS_5] = (-DEFAULT_AXIS5_MAX_TRAVEL),
+    .backlash_per_axis[AXIS_5]=DEFAULT_AXIS5_BACKLASH,
 #endif
 #if N_AXIS > 5
     .steps_per_mm[AXIS_6] = DEFAULT_AXIS6_STEPS_PER_UNIT,
     .max_rate[AXIS_6] = DEFAULT_AXIS6_MAX_RATE,
     .acceleration[AXIS_6] = DEFAULT_AXIS6_ACCELERATION,
     .max_travel[AXIS_6] = (-DEFAULT_AXIS6_MAX_TRAVEL),
+    .backlash_per_axis[AXIS_6]=DEFAULT_AXIS6_BACKLASH,
 #endif
 };
 
@@ -242,6 +249,7 @@ uint8_t settings_store_global_setting(uint8_t parameter, float value) {
             break;
           case 2: settings.acceleration[parameter] = value*60*60; break; // Convert to mm/min^2 for grbl internal use.
           case 3: settings.max_travel[parameter] = -value; break;  // Store as negative for grbl internal use.
+          case 4: settings.backlash_per_axis[parameter] = value; break;  
         }
         break; // Exit while-loop after setting has been configured and proceed to the EEPROM write call.
       } else {

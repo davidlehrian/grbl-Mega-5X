@@ -22,7 +22,6 @@
 
 #include "grbl.h"
 
-
 // Declare system global variable structure
 system_t sys;
 int32_t sys_position[N_AXIS];      // Real-time machine (aka home) position vector in steps.
@@ -518,6 +517,7 @@ int main(void)
     sleep_init();
     plan_reset(); // Clear block buffer and planner variables
     st_reset(); // Clear stepper subsystem variables.
+    backlash_initialize();
 
     // Sync cleared gcode and planner positions to current system position.
     plan_sync_position();

@@ -184,4 +184,58 @@
     #define DEFAULT_HOMING_PULLOFF 5.0 // mm
   #endif 
 
+  #ifdef DEFAULTS_SHERLINE_2010
+    // Description: Sherline 2010 mill with four NEMA 23 FlashCut 110 oz-in stepper motors,
+    // driven by four Flashcut stepper drivers.
+    #define MICROSTEPS 2
+    #define STEPS_PER_REV 200
+    #define UNIT_PER_REV_AXIS1 1 // 1mm/rev leadscrew
+    #define UNIT_PER_REV_AXIS2 1 // 1mm/rev leadscrew
+    #define UNIT_PER_REV_AXIS3 1 // 1mm/rev leadscrew
+    #define UNIT_PER_REV_AXIS4 5 // 5°/rev
+    #define DEFAULT_AXIS1_STEPS_PER_UNIT (STEPS_PER_REV*MICROSTEPS/UNIT_PER_REV_AXIS1)
+    #define DEFAULT_AXIS2_STEPS_PER_UNIT (STEPS_PER_REV*MICROSTEPS/UNIT_PER_REV_AXIS2)
+    #define DEFAULT_AXIS3_STEPS_PER_UNIT (STEPS_PER_REV*MICROSTEPS/UNIT_PER_REV_AXIS3)
+    #define DEFAULT_AXIS1_BACKLASH 0.25
+    #define DEFAULT_AXIS2_BACKLASH 0.25
+    #define DEFAULT_AXIS3_BACKLASH 0.25
+    #define DEFAULT_AXIS1_MAX_RATE 600.0 // mm/min (25 ipm)
+    #define DEFAULT_AXIS2_MAX_RATE 600.0 // mm/min
+    #define DEFAULT_AXIS3_MAX_RATE 500.0 // mm/min
+    #define DEFAULT_AXIS1_ACCELERATION (50.0*60*60) // 50*60*60 mm/min^2 = 50 mm/sec^2
+    #define DEFAULT_AXIS2_ACCELERATION (50.0*60*60) // 50*60*60 mm/min^2 = 50 mm/sec^2
+    #define DEFAULT_AXIS3_ACCELERATION (50.0*60*60) // 50*60*60 mm/min^2 = 50 mm/sec^2
+    #define DEFAULT_AXIS1_MAX_TRAVEL 230.0 // mm NOTE: Must be a positive value.
+    #define DEFAULT_AXIS2_MAX_TRAVEL 290.0 // mm NOTE: Must be a positive value.
+    #define DEFAULT_AXIS3_MAX_TRAVEL 150.0 // mm NOTE: Must be a positive value.
+    #define DEFAULT_AXIS4_STEPS_PER_UNIT (STEPS_PER_REV*MICROSTEPS/UNIT_PER_REV_AXIS4)
+    #define DEFAULT_AXIS4_MAX_RATE 1440 // °/mn
+    #define DEFAULT_AXIS4_ACCELERATION (100.0*60*60) // 100*60*60°/min^2 = 100°/sec^2
+    #define DEFAULT_AXIS4_MAX_TRAVEL 360.0 // °
+    #define DEFAULT_AXIS4_BACKLASH 0.5 // °
+
+    #define DEFAULT_SPINDLE_RPM_MAX 2800.0 // rpm
+    #define DEFAULT_SPINDLE_RPM_MIN 0.0 // rpm  
+    #define DEFAULT_STEP_PULSE_MICROSECONDS 10
+    #define DEFAULT_STEPPING_INVERT_MASK 0
+    #define DEFAULT_DIRECTION_INVERT_MASK (1<<AXIS_1)  
+    #define DEFAULT_STEPPER_IDLE_LOCK_TIME 25 // msec (0-254, 255 keeps steppers enabled)
+    #define DEFAULT_STATUS_REPORT_MASK 1 // MPos enabled
+    #define DEFAULT_JUNCTION_DEVIATION 0.01 // mm
+    #define DEFAULT_ARC_TOLERANCE 0.002 // mm
+    #define DEFAULT_REPORT_INCHES 0 // true
+    #define DEFAULT_INVERT_ST_ENABLE 0 // false
+    #define DEFAULT_INVERT_LIMIT_PINS 0 // false
+    #define DEFAULT_SOFT_LIMIT_ENABLE 0 // false
+    #define DEFAULT_HARD_LIMIT_ENABLE 0  // false
+    #define DEFAULT_INVERT_PROBE_PIN 0 // false
+    #define DEFAULT_LASER_MODE 0 // false
+    #define DEFAULT_HOMING_ENABLE 0  // false
+    #define DEFAULT_HOMING_DIR_MASK 0 // move positive dir
+    #define DEFAULT_HOMING_FEED_RATE 50.0 // mm/min
+    #define DEFAULT_HOMING_SEEK_RATE 635.0 // mm/min
+    #define DEFAULT_HOMING_DEBOUNCE_DELAY 250 // msec (0-65k)
+    #define DEFAULT_HOMING_PULLOFF 1.0 // mm
+  #endif
+
 #endif

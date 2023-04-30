@@ -63,6 +63,7 @@ typedef struct {
   uint32_t step_event_count;
   uint8_t direction_bits[N_AXIS];
   uint8_t is_pwm_rate_adjusted; // Tracks motions that require constant laser power/rate
+  uint8_t back_lash_comp;
 } st_block_t;
 
 static st_block_t st_block_buffer[SEGMENT_BUFFER_SIZE-1];
@@ -512,8 +513,14 @@ ISR(TIMER1_COMPA_vect)
   if (st.counter_x > st.exec_block->step_event_count) {
     st.step_outbits[AXIS_1] |= (1<<STEP_BIT(AXIS_1));
     st.counter_x -= st.exec_block->step_event_count;
-    if (st.exec_block->direction_bits[AXIS_1] & (1<<DIRECTION_BIT(AXIS_1))) { sys_position[AXIS_1]--; }
-    else { sys_position[AXIS_1]++; }
+    //Dont update system position data until all backlash steps are taken up.
+    if (!st.exec_block->back_lash_comp){
+      if (st.exec_block->direction_bits[AXIS_1] & (1<<DIRECTION_BIT(AXIS_1))) { 
+        sys_position[AXIS_1]--; 
+      }  else { 
+        sys_position[AXIS_1]++;
+      }
+    }
   }
 
   #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
@@ -524,8 +531,14 @@ ISR(TIMER1_COMPA_vect)
   if (st.counter_y > st.exec_block->step_event_count) {
     st.step_outbits[AXIS_2] |= (1<<STEP_BIT(AXIS_2));
     st.counter_y -= st.exec_block->step_event_count;
-    if (st.exec_block->direction_bits[AXIS_2] & (1<<DIRECTION_BIT(AXIS_2))) { sys_position[AXIS_2]--; }
-    else { sys_position[AXIS_2]++; }
+    //Dont update system position data until all backlash steps are taken up.
+    if (!st.exec_block->back_lash_comp){
+      if (st.exec_block->direction_bits[AXIS_2] & (1<<DIRECTION_BIT(AXIS_2))) {
+        sys_position[AXIS_2]--; 
+      }  else {
+        sys_position[AXIS_2]++; 
+      }
+    }
   }
   #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
     st.counter_z += st.steps[AXIS_3];
@@ -535,8 +548,14 @@ ISR(TIMER1_COMPA_vect)
   if (st.counter_z > st.exec_block->step_event_count) {
     st.step_outbits[AXIS_3] |= (1<<STEP_BIT(AXIS_3));
     st.counter_z -= st.exec_block->step_event_count;
-    if (st.exec_block->direction_bits[AXIS_3] & (1<<DIRECTION_BIT(AXIS_3))) { sys_position[AXIS_3]--; }
-    else { sys_position[AXIS_3]++; }
+    //Dont update system position data until all backlash steps are taken up.
+    if (!st.exec_block->back_lash_comp){
+      if (st.exec_block->direction_bits[AXIS_3] & (1<<DIRECTION_BIT(AXIS_3))) {
+        sys_position[AXIS_3]--; 
+      } else { 
+        sys_position[AXIS_3]++; 
+      }
+    }
   }
   #if N_AXIS > 3
     #ifdef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
@@ -547,8 +566,14 @@ ISR(TIMER1_COMPA_vect)
     if (st.counter_4 > st.exec_block->step_event_count) {
       st.step_outbits[AXIS_4] |= (1<<STEP_BIT(AXIS_4));
       st.counter_4 -= st.exec_block->step_event_count;
-      if (st.exec_block->direction_bits[AXIS_4] & (1<<DIRECTION_BIT(AXIS_4))) { sys_position[AXIS_4]--; }
-      else { sys_position[AXIS_4]++; }
+      //Dont update system position data until all backlash steps are taken up.
+      if (!st.exec_block->back_lash_comp){
+        if (st.exec_block->direction_bits[AXIS_4] & (1<<DIRECTION_BIT(AXIS_4))) {
+          sys_position[AXIS_4]--; 
+        }  else { 
+          sys_position[AXIS_4]++; 
+        }
+      }
     }
   #endif // N_AXIS > 3
   #if N_AXIS > 4
@@ -560,8 +585,14 @@ ISR(TIMER1_COMPA_vect)
     if (st.counter_5 > st.exec_block->step_event_count) {
       st.step_outbits[AXIS_5] |= (1<<STEP_BIT(AXIS_5));
       st.counter_5 -= st.exec_block->step_event_count;
-      if (st.exec_block->direction_bits[AXIS_5] & (1<<DIRECTION_BIT(AXIS_5))) { sys_position[AXIS_5]--; }
-      else { sys_position[AXIS_5]++; }
+      //Dont update system position data until all backlash steps are taken up.
+      if (!st.exec_block->back_lash_comp){
+        if (st.exec_block->direction_bits[AXIS_5] & (1<<DIRECTION_BIT(AXIS_5))) {
+          sys_position[AXIS_5]--;
+        }  else {
+          sys_position[AXIS_5]++;
+        }
+      }
     }
   #endif // N_AXIS > 4
   #if N_AXIS > 5
@@ -573,8 +604,14 @@ ISR(TIMER1_COMPA_vect)
     if (st.counter_6 > st.exec_block->step_event_count) {
       st.step_outbits[AXIS_6] |= (1<<STEP_BIT(AXIS_6));
       st.counter_6 -= st.exec_block->step_event_count;
-      if (st.exec_block->direction_bits[AXIS_6] & (1<<DIRECTION_BIT(AXIS_6))) { sys_position[AXIS_6]--; }
-      else { sys_position[AXIS_6]++; }
+      //Dont update system position data until all backlash steps are taken up.
+      if (!st.exec_block->back_lash_comp){
+        if (st.exec_block->direction_bits[AXIS_6] & (1<<DIRECTION_BIT(AXIS_6))) {
+          sys_position[AXIS_6]--;
+        }  else {
+          sys_position[AXIS_6]++;
+        }
+      }
     }
   #endif // N_AXIS > 5
 
@@ -878,13 +915,19 @@ void st_prep_buffer()
         }
 
         #ifndef ADAPTIVE_MULTI_AXIS_STEP_SMOOTHING
-          for (idx=0; idx<N_AXIS; idx++) { st_prep_block->steps[idx] = (pl_block->steps[idx] << 1); }
+          for (idx=0; idx<N_AXIS; idx++) { 
+            st_prep_block->steps[idx] = (pl_block->steps[idx] << 1); 
+            st_prep_block->back_lash_comp = pl_block->back_lash_comp;
+          }
           st_prep_block->step_event_count = (pl_block->step_event_count << 1);
         #else
           // With AMASS enabled, simply bit-shift multiply all Bresenham data by the max AMASS
           // level, such that we never divide beyond the original data anywhere in the algorithm.
           // If the original data is divided, we can lose a step from integer roundoff.
-          for (idx=0; idx<N_AXIS; idx++) { st_prep_block->steps[idx] = pl_block->steps[idx] << MAX_AMASS_LEVEL; }
+          for (idx=0; idx<N_AXIS; idx++) {
+            st_prep_block->steps[idx] = pl_block->steps[idx] << MAX_AMASS_LEVEL; 
+            st_prep_block->back_lash_comp = pl_block->back_lash_comp;
+          }
           st_prep_block->step_event_count = pl_block->step_event_count << MAX_AMASS_LEVEL;
         #endif
 

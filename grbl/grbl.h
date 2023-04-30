@@ -47,6 +47,7 @@
 #include "defaults.h"
 #include "cpu_map.h"
 #include "planner.h"
+#include "backlash.h"
 #include "coolant_control.h"
 #include "digital_control.h"
 #include "analog_control.h"
