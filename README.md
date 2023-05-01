@@ -1,11 +1,11 @@
 This version adds backlash to the X,Y,Z,A,B & C axis. The values can be set via:
 
-$140=x.xx
-$141=x.xx
-$142=x.xx
-$143=x.xx
-$144=x.xx
-$145=x.xx
+$140=x.xx  
+$141=x.xx  
+$142=x.xx  
+$143=x.xx  
+$144=x.xx  
+$145=x.xx  
 
 This build is https://github.com/fra589/grbl-Mega-5X with backlash from https://github.com/shooter64738/grbl-mega added.
 
